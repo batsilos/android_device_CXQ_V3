@@ -12,23 +12,23 @@
 
 * init
 
-        # repo init -u git://github.com/CyanogenMod/android.git -b cm-12.1
+        # repo init -u git://github.com/fire855/android.git -b cm-12.1
         
         # repo sync
         
-        # source build/envsetup.sh
+        # source build/envsetup.sh or . build/envsetup.sh
         
-        # lunch cm_V3-eng
+        # lunch cm_V3-userdebug
 
 * recoveries
 
-        # . build/tools/device/makerecoveries.sh cm_V3-eng
+        # . build/tools/device/makerecoveries.sh cm_V3-userdebug
     
         # mka bootimage
 
 * full build
 
-        # brunch cm_V3-eng
+        # brunch cm_V3-userdebug -jx (x number of cpu cores of building machine)
 
 # MTK
 
