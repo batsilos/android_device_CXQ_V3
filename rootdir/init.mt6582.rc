@@ -3,6 +3,8 @@ import init.modem.rc
 import init.ssd.rc
 
 on init
+    export LD_PRELOAD /system/lib/libxlog.so
+
     chown system graphics /dev/ion
     chmod 0644 /dev/ion
 
@@ -132,7 +134,7 @@ on init
     chmod 0660 /dev/mt_otg_test
 
     chown system media /dev/MTK_SMI
-    chmod 0666 /dev/MTK_SMI
+    chmod 0660 /dev/MTK_SMI
     chown system media /dev/mtk_sched
     chmod 0660 /dev/mtk_sched
     chown system media /dev/ebc
@@ -193,6 +195,7 @@ on init
 
     mkdir /data/amit/ 0770 system system
     mkdir /data/misc/sensor 0774 system system
+    mkdir /data/misc/sensors 0664 system system
     mkdir /data/misc/akmd 0770 system system
     mkdir /data/misc/s62x 0771 compass compass
     mkdir /data/acdapi/ 0770 system system
@@ -217,7 +220,7 @@ on init
     chmod 0664 /sys/devices/platform/mt-pmic/pmic_access_bank1
     chmod 0664 /sys/devices/platform/mt6333-user/mt6333_access
     chmod 0664 /sys/devices/platform/mt-pmic/pmic_access
-    chmod 0666 /sys/bus/platform/drivers/mem_bw_ctrl/concurrency_scenario
+    chmod 0664 /sys/bus/platform/drivers/mem_bw_ctrl/concurrency_scenario
     chmod 0664 /sys/module/lowmemorykiller/parameters/adj
     chmod 0664 /sys/module/lowmemorykiller/parameters/minfree
     chmod 0660 /sys/power/autosleep
@@ -268,11 +271,16 @@ on init
     chmod 0660 /dev/fm
     chown system media /dev/fm
 
+    # device info /proc interface
+    mknod /dev/devmap c 196 0;
+    chmod 0440 /dev/devmap
+    chown root system /dev/devmap
+
     # TV-out
     chmod 0664 /dev/TV-out
 
     #H DMI
-    chown meida system /dev/hdmitx
+    chown media system /dev/hdmitx
     chmod 0664 /dev/hdmitx
  
     # JPEG
@@ -360,10 +368,10 @@ on fs
 
     mount_all /fstab.mt6582
 
-    write /proc/bootprof "INIT:NAND:Mount_END"
-
     mkdir /data/agps_supl 0771 gps system
     mkdir /data/gps_mnl 0771 gps system
+
+    write /proc/bootprof "INIT:NAND:Mount_END"
 
 on property:wlan.driver.status=ok
 	write /dev/wmtWifi "1"
@@ -501,6 +509,7 @@ service memsicd3416x /system/bin/memsicd3416x
 	 user system
     group system
     class main
+	oneshot
 
 service akmd8975 /system/bin/akmd8975
     disabled
@@ -526,11 +535,11 @@ service bmm050d /system/bin/bmm050d
     group system
     class main
 
-service bmm056d /system/bin/bmm056d
-    disabled
-    user system
-    group system
-    class main
+#service bmm056d /system/bin/bmm056d
+#    disabled
+#    user system
+#    group system
+#    class main
 
 service mc6420d /system/bin/mc6420d
     disabled
@@ -572,6 +581,33 @@ service mc64xxd /system/bin/mc64xxd
 #
 #sensor service (end)
 #
+#
+
+#emsvr service (start)
+#
+on property:ro.build.type=eng
+    start emsvr
+
+on property:ro.build.type=userdebug
+    start emsvr_user
+
+on property:ro.build.type=user
+    start emsvr_user
+
+service emsvr_user /system/bin/em_svr
+    disabled
+    user nvram
+    group system nvram
+
+service emsvr /system/bin/em_svr
+    disabled
+    user root
+
+service afmsvr /system/bin/afm_server
+		user root
+
+#
+#emsvr service (end)
 #
 
 service agpsd /system/bin/mtk_agpsd
