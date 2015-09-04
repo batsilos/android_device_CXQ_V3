@@ -28,7 +28,7 @@
 
 * full build
 
-        # brunch cm_V3-userdebug -jx (x number of cpu cores of building machine)
+        # brunch cm_V3-userdebug -jx (x number of cpu cores of building machine +1)
 
 # MTK
 
