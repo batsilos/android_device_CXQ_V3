@@ -1,9 +1,8 @@
 # inherit from the proprietary version
 -include vendor/CXQ/V3/BoardConfigVendor.mk
-LOCAL_PATH := device/CXQ/V3
 
 # GPS
-TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
+TARGET_SPECIFIC_HEADER_PATH := device/CXQ/V3/include
 
 # Platform
 TARGET_BOARD_PLATFORM := mt6582
@@ -14,23 +13,21 @@ TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
-ARCH_ARM_HAVE_VFP := true
-ARCH_ARM_HAVE_NEON := true
 TARGET_CPU_SMP := true
 TARGET_CPU_VARIANT := cortex-a7
-TARGET_GLOBAL_CFLAGS   += -mfpu=neon -mfloat-abi=softfp
-TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
+
+TARGET_LDPRELOAD := /system/lib/libxlog.so
+
+BOARD_HAS_NO_SELECT_BUTTON := true
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := mt6582
-BOARD_GPS_LIBRARIES := true
-BOARD_MEDIATEK_USES_GPS := true
-MTK_GPS_SUPPORT := yes
-MTK_GPS_CHIP := MTK_GPS_MT6582
 
-TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
-
+# MTK Hardware
+BOARD_HAS_MTK_HARDWARE := true
+MTK_HARDWARE := true
+COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
+COMMON_GLOBAL_CPPFLAGS += -DMTK_HARDWARE
 
 # make_ext4fs requires numbers in dec format
 BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216
@@ -39,14 +36,16 @@ BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1572864000
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 13952483328
 BOARD_FLASH_BLOCK_SIZE := 131072
 
-# kernel
-TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
-BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/bootimg.mk
-BOARD_MKBOOTIMG_ARGS := --board 1418903743
+TARGET_USERIMAGES_USE_EXT4:=true
+TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
+
 BOARD_KERNEL_CMDLINE :=
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_CUSTOM_BOOTIMG := true
+
+# Flags
+TARGET_GLOBAL_CFLAGS   += -mfpu=neon -mfloat-abi=softfp
+TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 
 TARGET_KMODULES := true
 
@@ -56,35 +55,67 @@ TARGET_OTA_ASSERT_DEVICE := V3,lsch92_wet_jb9
 COMMON_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
 TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 
-USE_CAMERA_STUB := true
+TARGET_PREBUILT_KERNEL := device/CXQ/V3/kernel
+BOARD_CUSTOM_BOOTIMG_MK := device/CXQ/V3/bootimg.mk
+BOARD_MKBOOTIMG_ARGS := --board 1418903743
+BOARD_CUSTOM_BOOTIMG := true
+#TARGET_PREBUILT_RECOVERY_KERNEL :=
+
+TARGET_RECOVERY_FSTAB := device/CXQ/V3/rootdir/root/twrp.fstab
+
+# TWRP
+DEVICE_RESOLUTION := 720x1280
+TARGET_SCREEN_HEIGHT := 1280
+TARGET_SCREEN_WIDTH := 720
+RECOVERY_GRAPHICS_USE_LINELENGTH := true
+RECOVERY_SDCARD_ON_DATA := true
+TW_NO_REBOOT_BOOTLOADER := true
+TW_BRIGHTNESS_PATH := /sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/musb-hdrc.0/gadget/lun%d/file
+TW_MAX_BRIGHTNESS := 255
+TW_INTERNAL_STORAGE_PATH := "/data/media/0"
+TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
+TW_EXTERNAL_STORAGE_PATH := "/external_sd"
+TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
+TW_CRYPTO_FS_TYPE := "ext4"
+TW_CRYPTO_REAL_BLKDEV := "/dev/block/mmcblk0p7"
+TW_CRYPTO_MNT_POINT := "/data"
+TW_CRYPTO_FS_OPTIONS := "nosuid,nodev,noatime,discard,noauto_da_alloc,data=ordered"
+TW_INCLUDE_FB2PNG := true
+
+# Deodex
+WITH_DEXPREOPT := false
+DISABLE_DEXPREOPT := true
+
+# Bluetooth
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_BLUETOOTH_MTK := true
+BOARD_BLUETOOTH_DOES_NOT_USE_RFKILL := true
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/CXQ/V3/bluetooth
+
+# EGL settings
+BOARD_EGL_CFG := device/CXQ/V3/rootdir/configs/egl.cfg
+USE_OPENGL_RENDERER := true
+BOARD_EGL_WORKAROUND_BUG_10194508 := true
 
 # Disable memcpy opt (for audio libraries)
 TARGET_CPU_MEMCPY_OPT_DISABLE := true
 
-# EGL settings
-BOARD_EGL_CFG := $(LOCAL_PATH)/configs/egl.cfg
-USE_OPENGL_RENDERER := true
-BOARD_EGL_WORKAROUND_BUG_10194508 := true
+# SELINUX
+BOARD_SEPOLICY_DIRS := \
+       device/CXQ/V3/sepolicy
 
-# MTK Hardware
-BOARD_HAS_MTK_HARDWARE := true
-BOARD_USES_MTK_DP_FRAMEWORK := true
+BOARD_SEPOLICY_UNION := \
+       device.te \
+       app.te \
+       netd.te \
+       system.te \
+       file_contexts
 
-#Mtk Audio
-BOARD_USES_MTK_AUDIO := true
-
-COMMON_GLOBAL_CFLAGS += \
-	-DMTK_HARDWARE \
-	-DMTK_MT6582 \
-	-DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
-
-COMMON_GLOBAL_CPPFLAGS += \
-	-DMTK_HARDWARE
-
-BLOCK_BASED_OTA := false
+TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
 
 # RIL
-BOARD_RIL_CLASS := ../../../$(LOCAL_PATH)/ril/
+BOARD_RIL_CLASS := ../../../device/CXQ/V3/ril/
 
 BOARD_CONNECTIVITY_VENDOR := MediaTek
 BOARD_CONNECTIVITY_MODULE := conn_soc
@@ -99,42 +130,3 @@ WIFI_DRIVER_FW_PATH_PARAM:="/dev/wmtWifi"
 WIFI_DRIVER_FW_PATH_STA:=STA
 WIFI_DRIVER_FW_PATH_AP:=AP
 WIFI_DRIVER_FW_PATH_P2P:=P2P
-
-# Bluetooth
-BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_BLUETOOTH_MTK := true
-BOARD_BLUETOOTH_DOES_NOT_USE_RFKILL := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
-
-# recovery TWRP
-
-DEVICE_RESOLUTION := 720x1280
-BOARD_HAS_NO_SELECT_BUTTON := true
-#TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/twrp.fstab
-TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/recovery.fstab
-TARGET_PREBUILT_RECOVERY_KERNEL := $(LOCAL_PATH)/kernel
-BOARD_HAS_LARGE_FILESYSTEM := true
-RECOVERY_SDCARD_ON_DATA := true
-RECOVERY_GRAPHICS_USE_LINELENGTH := true
-TW_NO_REBOOT_BOOTLOADER := true
-TW_BRIGHTNESS_PATH := /sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness
-TW_MAX_BRIGHTNESS := 255
-TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
-TW_INCLUDE_JB_CRYPTO := true
-TW_CRYPTO_FS_TYPE := "ext4"
-TW_CRYPTO_REAL_BLKDEV := "/dev/block/mmcblk0p7"
-TW_CRYPTO_MNT_POINT := "/data"
-TW_CRYPTO_FS_OPTIONS := "nosuid,nodev,noatime,discard,noauto_da_alloc,data=ordered"
-TW_INCLUDE_FB2PNG := true
-TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/virtual/thermal/thermal_zone1/temp
-
-# SELINUX
-BOARD_SEPOLICY_DIRS := \
-       device/CXQ/V3/sepolicy
-
-BOARD_SEPOLICY_UNION := \
-       device.te \
-       app.te \
-       system.te \
-       netd.te \
-       file_contexts

@@ -35,8 +35,8 @@
 	     android:primary="true" 
 	     android:emulated="true"
 	     android:allowMassStorage="true"
-	     android:mtpReserve="400" />
-    
+             android:mtpReserve="400" />
+
     <storage android:mountPoint="/storage/sdcard1" 
 	     android:storageDescription="@string/storage_sd_card"
 	     android:allowMassStorage="true"
