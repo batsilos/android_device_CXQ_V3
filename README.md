@@ -14,9 +14,6 @@ This is a device tree for Inew V3 which is based on MTK6582 SoC.
         
         # source build/envsetup.sh
 
-<<<<<<< HEAD
-        # brunch cm_V3-userdebug
-=======
         # brunch cm_V3-userdebug -jx (x number of cpu cores of building machine +1)
 
 # MTK
