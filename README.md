@@ -1,6 +1,6 @@
 ----Thanks for fire855 & superdragonpt, who are contributing to the working CyanogenMod of MTK hardware(MT6592&MT6582).---
 
-This is a device tree for Xiaomi Redmi_1s_TD(HM2014011) which is based on MTK6582 SoC. Powered by ferhung.
+This is a device tree for Inew V3 which is based on MTK6582 SoC.
 # Build
 
 * init
@@ -15,7 +15,7 @@ This is a device tree for Xiaomi Redmi_1s_TD(HM2014011) which is based on MTK658
         # source build/envsetup.sh
 
 <<<<<<< HEAD
-        # brunch cm_HM2014011-eng
+        # brunch cm_V3-userdebug
 =======
         # brunch cm_V3-userdebug -jx (x number of cpu cores of building machine +1)
 
