@@ -62,8 +62,12 @@ BOARD_CUSTOM_BOOTIMG_MK := device/CXQ/V3/MTKbootimg.mk
 BOARD_MKBOOTIMG_ARGS := --board 1418903743
 BOARD_CUSTOM_BOOTIMG := true
 
+<<<<<<< HEAD
 # Recovery
 TARGET_RECOVERY_FSTAB := device/CXQ/V3/rootdir/root/recovery.fstab
+=======
+TARGET_RECOVERY_FSTAB := device/CXQ/V3/rootdir/twrp.fstab
+>>>>>>> origin/cm-12.1
 
 TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
 
@@ -78,7 +82,7 @@ BOARD_BLUETOOTH_DOES_NOT_USE_RFKILL := true
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/CXQ/V3/bluetooth
 
 # EGL settings
-BOARD_EGL_CFG := device/CXQ/V3/rootdir/configs/egl.cfg
+BOARD_EGL_CFG := device/CXQ/V3/configs/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_EGL_WORKAROUND_BUG_10194508 := true
 

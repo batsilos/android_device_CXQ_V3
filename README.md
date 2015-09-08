@@ -14,7 +14,15 @@ This is a device tree for Xiaomi Redmi_1s_TD(HM2014011) which is based on MTK658
         
         # source build/envsetup.sh
 
+<<<<<<< HEAD
         # brunch cm_HM2014011-eng
+=======
+        # brunch cm_V3-userdebug -jx (x number of cpu cores of building machine +1)
+
+# MTK
+
+Few words about mtk related binaries, services and migration peculiarities.
+>>>>>>> origin/cm-12.1
 
 # Limitations
 
