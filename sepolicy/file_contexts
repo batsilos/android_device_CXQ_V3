@@ -4,5 +4,4 @@
 
 # Wifi device
 /dev/wmtWifi       u:object_r:wmtWifi_device:s0
-#
 

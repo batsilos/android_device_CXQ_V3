@@ -26,9 +26,9 @@ key 61    CALL
 
 key 102   HOME
 
-key 115   VOLUME_UP         WAKE
-key 114   VOLUME_DOWN       WAKE
-key 113   MUTE              WAKE
+key 115   VOLUME_UP         WAKE_DROPPED
+key 114   VOLUME_DOWN       WAKE_DROPPED
+key 113   MUTE              WAKE_DROPPED
 key 116   POWER             WAKE
 key 212   CAMERA
 key 211   FOCUS

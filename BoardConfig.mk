@@ -1,47 +1,48 @@
 # inherit from the proprietary version
 -include vendor/CXQ/V3/BoardConfigVendor.mk
 
-# GPS
-TARGET_SPECIFIC_HEADER_PATH := device/CXQ/V3/include
-
-# Platform
+# Board
 TARGET_BOARD_PLATFORM := mt6582
-TARGET_NO_BOOTLOADER := true
-
-# Architecture
-TARGET_ARCH := arm
-TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
+ARCH_ARM_HAVE_VFP := true
 TARGET_CPU_SMP := true
-TARGET_CPU_VARIANT := cortex-a7
-
-TARGET_LDPRELOAD := /system/lib/libxlog.so
+TARGET_ARCH := arm
+ARCH_ARM_HAVE_NEON := true
+TARGET_NO_BOOTLOADER := true
+TARGET_ARCH_VARIANT := armv7-a-neon
+TARGET_ARCH_VARIANT_CPU := cortex-a7
+TARGET_CPU_VARIANT:= cortex-a7
+TARGET_CPU_MEMCPY_OPT_DISABLE := true
 
 BOARD_HAS_NO_SELECT_BUTTON := true
-
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := mt6582
 
-# MTK Hardware
+TARGET_USERIMAGES_USE_EXT4:=true
+TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
+
+# Assert
+TARGET_OTA_ASSERT_DEVICE := V3,lsch92_wet_jb9
+
+# MTK HARDWARE
 BOARD_HAS_MTK_HARDWARE := true
 MTK_HARDWARE := true
 COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
 COMMON_GLOBAL_CPPFLAGS += -DMTK_HARDWARE
 
-# make_ext4fs requires numbers in dec format
+# RIL
+BOARD_RIL_CLASS := ../../../device/CXQ/V3/ril/
+
+BOARD_CONNECTIVITY_VENDOR := MediaTek
+BOARD_CONNECTIVITY_MODULE := conn_soc
+
+# Partitions & Image
 BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1572864000
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 13952483328
 BOARD_FLASH_BLOCK_SIZE := 131072
-
-TARGET_USERIMAGES_USE_EXT4:=true
-TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
-
-BOARD_KERNEL_CMDLINE :=
-BOARD_KERNEL_BASE := 0x10000000
-BOARD_KERNEL_PAGESIZE := 2048
 
 # Flags
 TARGET_GLOBAL_CFLAGS   += -mfpu=neon -mfloat-abi=softfp
@@ -49,39 +50,22 @@ TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 
 TARGET_KMODULES := true
 
-# Assert
-TARGET_OTA_ASSERT_DEVICE := V3,lsch92_wet_jb9
-
 COMMON_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
 TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 
+# Kernel 
+BOARD_KERNEL_CMDLINE :=
+BOARD_KERNEL_BASE := 0x10000000
+BOARD_KERNEL_PAGESIZE := 2048
 TARGET_PREBUILT_KERNEL := device/CXQ/V3/kernel
-BOARD_CUSTOM_BOOTIMG_MK := device/CXQ/V3/bootimg.mk
+BOARD_CUSTOM_BOOTIMG_MK := device/CXQ/V3/MTKbootimg.mk
 BOARD_MKBOOTIMG_ARGS := --board 1418903743
 BOARD_CUSTOM_BOOTIMG := true
-#TARGET_PREBUILT_RECOVERY_KERNEL :=
 
-TARGET_RECOVERY_FSTAB := device/CXQ/V3/rootdir/root/twrp.fstab
+# Recovery
+TARGET_RECOVERY_FSTAB := device/CXQ/V3/rootdir/root/recovery.fstab
 
-# TWRP
-DEVICE_RESOLUTION := 720x1280
-TARGET_SCREEN_HEIGHT := 1280
-TARGET_SCREEN_WIDTH := 720
-RECOVERY_GRAPHICS_USE_LINELENGTH := true
-RECOVERY_SDCARD_ON_DATA := true
-TW_NO_REBOOT_BOOTLOADER := true
-TW_BRIGHTNESS_PATH := /sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/musb-hdrc.0/gadget/lun%d/file
-TW_MAX_BRIGHTNESS := 255
-TW_INTERNAL_STORAGE_PATH := "/data/media/0"
-TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
-TW_EXTERNAL_STORAGE_PATH := "/external_sd"
-TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
-TW_CRYPTO_FS_TYPE := "ext4"
-TW_CRYPTO_REAL_BLKDEV := "/dev/block/mmcblk0p7"
-TW_CRYPTO_MNT_POINT := "/data"
-TW_CRYPTO_FS_OPTIONS := "nosuid,nodev,noatime,discard,noauto_da_alloc,data=ordered"
-TW_INCLUDE_FB2PNG := true
+TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
 
 # Deodex
 WITH_DEXPREOPT := false
@@ -98,10 +82,7 @@ BOARD_EGL_CFG := device/CXQ/V3/rootdir/configs/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_EGL_WORKAROUND_BUG_10194508 := true
 
-# Disable memcpy opt (for audio libraries)
-TARGET_CPU_MEMCPY_OPT_DISABLE := true
-
-# SELINUX
+# Selinux
 BOARD_SEPOLICY_DIRS := \
        device/CXQ/V3/sepolicy
 
@@ -111,14 +92,6 @@ BOARD_SEPOLICY_UNION := \
        netd.te \
        system.te \
        file_contexts
-
-TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
-
-# RIL
-BOARD_RIL_CLASS := ../../../device/CXQ/V3/ril/
-
-BOARD_CONNECTIVITY_VENDOR := MediaTek
-BOARD_CONNECTIVITY_MODULE := conn_soc
 
 # WIFI
 WPA_SUPPLICANT_VERSION := VER_0_8_X
@@ -130,3 +103,9 @@ WIFI_DRIVER_FW_PATH_PARAM:="/dev/wmtWifi"
 WIFI_DRIVER_FW_PATH_STA:=STA
 WIFI_DRIVER_FW_PATH_AP:=AP
 WIFI_DRIVER_FW_PATH_P2P:=P2P
+
+# GPS
+TARGET_SPECIFIC_HEADER_PATH := device/CXQ/V3/include
+
+#Resolution
+DEVICE_RESOLUTION := 720x1280
