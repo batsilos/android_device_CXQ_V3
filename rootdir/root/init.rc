@@ -69,12 +69,15 @@ on init
     mkdir /config 0500 root root
 
     # See storage config details at http://source.android.com/tech/storage/
-    mkdir /mnt/shell 0700 shell shell
     mkdir /mnt/media_rw 0700 media_rw media_rw
     mkdir /storage 0751 root sdcard_r
 
+    mkdir /mnt/cd-rom 0000 system system
+
     # Directory for putting things only root should see.
     mkdir /mnt/secure 0700 root root
+    # Create private mountpoint so we can MS_MOVE from staging
+    mount tmpfs tmpfs /mnt/secure mode=0700,uid=0,gid=0
 
     # Directory for staging bindmounts
     mkdir /mnt/secure/staging 0700 root root
@@ -190,8 +193,9 @@ on late-init
 on post-fs
     # once everything is setup, no need to modify /
     mount rootfs rootfs / ro remount
-    # mount shared so changes propagate into child namespaces
-    mount rootfs rootfs / shared rec
+    # mount shared so changes propagate into child namespaces  -> move to init.ssd.rc
+    # mount rootfs rootfs / shared rec
+    # mount tmpfs tmpfs /mnt/secure private rec
 
     # We chown/chmod /cache again so because mount is run as root + defaults
     chown system cache /cache
