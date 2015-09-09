@@ -1,4 +1,4 @@
-----Thanks for fire855 & superdragonpt, who are contributing to the working CyanogenMod of MTK hardware(MT6592&MT6582).---
+----Thanks for fire855 & superdragonpt + DRteufel, who are contributing to the working CyanogenMod of MTK hardware(MT6592&MT6582).---
 
 This is a device tree for Inew V3 which is based on MTK6582 SoC.
 # Build
@@ -6,7 +6,7 @@ This is a device tree for Inew V3 which is based on MTK6582 SoC.
 * init
   Sync CyanogenMod source:
 
-        # repo init -u git://github.com/ferhung/android.git -b cm-12.1
+        # repo init -u git://github.com/batsilos/android.git -b cm-12.1
         
         # repo sync
 
@@ -19,7 +19,6 @@ This is a device tree for Inew V3 which is based on MTK6582 SoC.
 # MTK
 
 Few words about mtk related binaries, services and migration peculiarities.
->>>>>>> origin/cm-12.1
 
 # Limitations
 
