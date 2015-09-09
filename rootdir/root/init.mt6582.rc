@@ -1,29 +1,10 @@
 import init.mt6582.usb.rc
 import init.modem.rc
+import init.ssd.rc
 
 on init
     export LD_PRELOAD /system/lib/libxlog.so
-
-    mkdir /mnt/shell/emulated 0700 shell shell
-    mkdir /storage/emulated 0555 root root
-
-    mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
-    mkdir /storage/sdcard1 0700 root root
-
-    mkdir /storage/usbotg 0700 root root
-    mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
-
-    export EXTERNAL_STORAGE /storage/emulated/legacy
-    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
-    export EMULATED_STORAGE_TARGET /storage/emulated
-    export SECONDARY_STORAGE /storage/sdcard1
-
-    # Support legacy paths
-    symlink /storage/emulated/legacy /sdcard
-    symlink /storage/emulated/legacy /mnt/sdcard
-    symlink /storage/emulated/legacy /storage/sdcard0
-    symlink /mnt/shell/emulated/0 /storage/emulated/legacy
-
+    
     chown system graphics /dev/ion
     chmod 0644 /dev/ion
 
@@ -267,8 +248,6 @@ on init
     chown system camera /dev/mtk_jpeg
 
 on post-fs-data
-    mkdir /data/media 0770 media_rw media_rw
-    chown media_rw media_rw /data/media
 
     # Create the directories used by the Wireless subsystem
     mkdir /data/misc/wifi 0770 wifi wifi
@@ -349,12 +328,10 @@ on fs
     mkdir /protect_s 0771 system system
 
     mount_all /fstab.mt6582
-    setprop ro.crypto.fuse_sdcard true
-
-    write /proc/bootprof "INIT:NAND:Mount_END"
 
     mkdir /data/agps_supl 0771 gps system
     mkdir /data/gps_mnl 0771 gps system
+    write /proc/bootprof "INIT:NAND:Mount_END"
 
 on property:wlan.driver.status=ok
 	write /dev/wmtWifi "1"
@@ -595,15 +572,3 @@ service BGW /system/xbin/BGW
     group gps system radio
     class main
     oneshot
-
-# virtual sdcard daemon running as media_rw (1023)
-service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
-    class late_start
-
-service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
-    class late_start
-    disabled
-
-service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbotg /storage/usbotg
-     class late_start
-     disabled
